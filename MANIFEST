@@ -1,0 +1,16 @@
+.last_cover_stats
+.perlcriticrc
+.perltidyrc
+Changes
+ignore.txt
+lib/Test/TinyMocker.pm
+Makefile.PL
+MANIFEST
+README
+t/00-load.t
+t/01_mock.t
+t/boilerplate.t
+t/manifest.t
+t/pod-coverage.t
+t/pod.t
+META.yml                                 Module meta-data (added by MakeMaker)
