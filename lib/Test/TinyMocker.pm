@@ -3,29 +3,79 @@ package Test::TinyMocker;
 use strict;
 use warnings;
 
+use Carp qw{ croak };
+
 use vars qw(@EXPORT);
 use base 'Exporter';
-our $VERSION = '0.01';
+use version; our $VERSION = qv('0.02');
 
-@EXPORT = qw(mock should method);
+my $mocks = {};
+
+@EXPORT = qw(mock unmock should method);
 
 sub method($) {@_}
 sub should(&) {@_}
 
 sub mock {
+    croak 'useless use of mock with one or less parameter'
+      if scalar @_ < 2;
+
+    my $symbol = @_ > 2 ? qq{$_[0]::$_[1]} : $_[0];
+    my $sub = $_[-1];
+
+    croak "unknown symbol : $symbol"
+      unless _symbol_exists($symbol);
+
+    _save_sub($symbol);
+    _bind_coderef_to_symbol($symbol, $sub);
+}
+
+sub unmock {
+
+    croak 'useless use of unmock without parameters'
+      unless scalar @_;
+
+    my $symbole = @_ == 2 ? qq{$_[0]::$_[1]} : $_[0];
+
+    croak "unkown method $symbole"
+      unless $mocks->{$symbole};
+
     {
         no strict 'refs';
         no warnings 'redefine', 'prototype';
-        if (@_ == 3) {
-            my ($class, $method, $sub) = @_;
-
-            *{"${class}::${method}"} = $sub;
-        }
-        else {
-            my ($method, $sub) = @_;
-            *{$method} = $sub;
-        }
+        *{$symbole} = delete $mocks->{$symbole};
     }
+}
+
+sub _symbol_exists {
+    my ($symbol) = @_;
+    {
+        no strict 'refs';
+        no warnings 'redefine', 'prototype';
+
+        return defined *{$symbol}{CODE};
+    }
+}
+
+sub _bind_coderef_to_symbol {
+    my ($symbol, $sub) = @_;
+    {
+        no strict 'refs';
+        no warnings 'redefine', 'prototype';
+
+        *{$symbol} = $sub;
+    }
+}
+
+sub _save_sub {
+    my ($name) = @_;
+
+    {
+        no strict 'refs';
+        $mocks->{$name} ||= *{$name}{CODE};
+    }
+
+    return $name;
 }
 
 1;
@@ -37,9 +87,7 @@ Test::TinyMocker - a very simple tool to mock external modules
 
 =head1 VERSION
 
-Version 0.01
-
-
+Version 0.02
 
 =head1 SYNOPSIS
 
@@ -60,6 +108,15 @@ Version 0.01
         };
 
     # Some::Module::some_method() will now always return $mocked_value;
+
+	# To restore the original method
+	
+	unmock 'Some::Module::some_method';
+
+	# or
+	
+	unmock 'Some::Module' => method 'some_method';
+	
 
 =head1 EXPORT
 
@@ -86,6 +143,17 @@ sweet mock statements:
 
     # or also:
     mock('Foo::Bar::a_method', sub { return 42;});
+
+=head2 unmock($module, $method)
+
+Syntactic sugar is provided (C<method>) in order to let you write sweet unmock
+statements:
+
+    # This:
+    unmock('Foo::Bar', 'a_method');
+
+    # is the same as:
+    unmock 'Foo::Bar' => method 'a_method';
 
 =head2 method
 
