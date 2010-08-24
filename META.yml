@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Test-TinyMocker
-version:            v0.02
+version:            0.02
 abstract:           a very simple tool to mock external modules
 author:
     - Alexis Sukrieh <sukria@sukria.net>
