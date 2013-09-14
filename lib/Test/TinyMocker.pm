@@ -29,7 +29,7 @@ sub mock {
           unless _symbol_exists($symbol);
 
         _save_sub($symbol);
-        _bind_coderef_to_symbol($symbol, $sub);
+        _bind_coderef_to_symbol( $symbol, $sub );
     }
 }
 
@@ -51,14 +51,14 @@ sub unmock {
 }
 
 sub _flat_symbols {
-    if (@_ == 2) {
+    if ( @_ == 2 ) {
         return ref $_[1] eq 'ARRAY'
-          ? map {qq{$_[0]::$_}} @{$_[1]}
+          ? map {qq{$_[0]::$_}} @{ $_[1] }
           : qq{$_[0]::$_[1]};
     }
     else {
         return ref $_[0] eq 'ARRAY'
-          ? @{$_[0]}
+          ? @{ $_[0] }
           : $_[0];
     }
 }
@@ -74,7 +74,7 @@ sub _symbol_exists {
 }
 
 sub _bind_coderef_to_symbol {
-    my ($symbol, $sub) = @_;
+    my ( $symbol, $sub ) = @_;
     {
         no strict 'refs';
         no warnings 'redefine', 'prototype';
@@ -95,11 +95,17 @@ sub _save_sub {
 }
 
 1;
-__END__
+
+
+=pod
 
 =head1 NAME
 
-Test::TinyMocker - a very simple tool to mock external modules
+Test::TinyMocker
+
+=head1 VERSION
+
+version 0.04
 
 =head1 SYNOPSIS
 
@@ -133,13 +139,17 @@ Test::TinyMocker - a very simple tool to mock external modules
 	
 	unmock 'Some::Module::some_method';
 
-	# or
+    # or
 	
 	unmock 'Some::Module' => method 'some_method';
 
     # or
 
     unmock 'Some::Module' => methods [ 'this_method', 'that_method' ];
+
+=head1 NAME
+
+Test::TinyMocker - a very simple tool to mock external modules
 
 =head1 EXPORT
 
@@ -212,13 +222,11 @@ Please report any bugs or feature requests to C<bug-test-tinymocker at rt.cpan.o
 the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Test-TinyMocker>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
-
 =head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.
 
     perldoc Test::TinyMocker
-
 
 You can also look for information at:
 
@@ -242,7 +250,6 @@ L<http://search.cpan.org/dist/Test-TinyMocker/>
 
 =back
 
-
 =head1 ACKNOWLEDGEMENTS
 
 This module was inspired by Gugod's blog, after the article published about
@@ -263,4 +270,18 @@ by the Free Software Foundation; or the Artistic License.
 
 See http://dev.perl.org/licenses/ for more information.
 
+=head1 AUTHOR
+
+Alexis Sukrieh <sukria@sukria.net>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2013 by Alexis Sukrieh.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
+
+
+__END__

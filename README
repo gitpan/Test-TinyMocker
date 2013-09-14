@@ -1,29 +1,13 @@
-Test-TinyMocker
-
-    use Test::More;
-    use Test::TinyMocker;
-
-    mock 'Some::Module'
-        => method 'some_method'
-        => should {
-            return $mocked_value;
-        };
-
-    # or 
-
-    mock 'Some::Module::some_method'
-        => should {
-            return $mocked_value;
-        };
-
-    # Some::Module::some_method() will now always return $mocked_value;
 
 
-This module was inspired by Gugod's blog, after the article published about
-mocking in Ruby and Perl: http://gugod.org/2009/05/mocking.html
+This archive contains the distribution Test-TinyMocker,
+version 0.04:
 
-This module was first part of the test tools provided by Dancer in its own t
-directory (previously named C<t::lib::EasyMocker>). A couple of developers asked
-me if I could released this module as a real Test:: distribution on CPAN, so
-here it is.
+  a very simple tool to mock external modules
+
+This software is copyright (c) 2013 by Alexis Sukrieh.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 

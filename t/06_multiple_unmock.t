@@ -8,33 +8,34 @@ use Test::More;
 use Test::TinyMocker;
 
 {
+
     package Foo::Bar;
-    sub baz { "day" }
-    sub qux { "way" }
+    sub baz {"day"}
+    sub qux {"way"}
 }
 
 # original value
 is Foo::Bar::baz(), "day", "initial value for baz is ok";
 is Foo::Bar::qux(), "way", "initial value for qux is ok";
 
-# mock new comportement 
-mock('Foo::Bar', [ 'baz', 'qux' ], sub { return 'night' });
+# mock new comportement
+mock( 'Foo::Bar', [ 'baz', 'qux' ], sub { return 'night' } );
 
 # unmock
-unmock('Foo::Bar', [ 'baz', 'qux' ]);
+unmock( 'Foo::Bar', [ 'baz', 'qux' ] );
 is Foo::Bar::baz(), "day", "original value for baz";
 is Foo::Bar::qux(), "way", "original value for qux";
 
-# mock new comportement 
-mock('Foo::Bar', [ 'baz', 'qux' ], sub { return 'night' });
+# mock new comportement
+mock( 'Foo::Bar', [ 'baz', 'qux' ], sub { return 'night' } );
 
 # unmock
-unmock(['Foo::Bar::baz','Foo::Bar::qux']);
+unmock( [ 'Foo::Bar::baz', 'Foo::Bar::qux' ] );
 is Foo::Bar::baz(), "day", "original value for baz";
 is Foo::Bar::qux(), "way", "original value for qux";
 
-# mock new comportement 
-mock('Foo::Bar', ['baz', 'qux'], sub { return 'night' });
+# mock new comportement
+mock( 'Foo::Bar', [ 'baz', 'qux' ], sub { return 'night' } );
 
 # unmock
 unmock 'Foo::Bar' => methods [ 'baz', 'qux' ];
